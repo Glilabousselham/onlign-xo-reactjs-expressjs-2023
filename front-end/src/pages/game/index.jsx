@@ -17,7 +17,6 @@ const GamePage = () => {
                 <Chat />
                 <GameBoard />
                 <Turns />
-
             </div>
         </MainLayout>
     )

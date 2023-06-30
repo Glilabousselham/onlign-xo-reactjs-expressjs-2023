@@ -2,13 +2,17 @@ const express = require('express')
 const authRouter = require('../routes/authRouter')
 const mainErrorHandler = require('../error-handlers/handler')
 const cors = require("cors")
-
+const http = require('http')
+const socket = require('socket.io')
 
 // connect to database
 require("../db-connection/connectToDatabase")()
 
 
 app = express()
+
+
+
 
 // set cors middlewares
 app.use(cors())
@@ -21,14 +25,7 @@ app.use(express.json())
 
 
 // routes
-app.use('/auth', (req, res, next) => {
-
-
-    setTimeout(() => {
-        next()
-    }, 2000);
-
-}, authRouter);
+app.use('/auth', authRouter);
 
 
 
@@ -36,4 +33,11 @@ app.use('/auth', (req, res, next) => {
 app.use(mainErrorHandler);
 
 
-module.exports = app;
+// create http sertver
+const httpServer = http.createServer(app)
+
+
+
+
+module.exports = httpServer;
+

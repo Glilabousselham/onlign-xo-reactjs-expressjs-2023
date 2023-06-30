@@ -23,9 +23,7 @@ module.exports = function hanler(err, req, res, next) {
         data.message = err.message;
     }
 
-
-
     res.status(status).json(data)
 
-    throw err
+    // console.log(err);
 }

@@ -3,7 +3,7 @@ const JWT = require("../wrappers/JWT")
 
 module.exports = async function authMiddleware(req, res, next) {
     try {
-        const token = req.headers.authorization.split(" ")[1]
+        const token = req.headers?.authorization?.split(" ")[1]
         const result = JWT.verify(token);
         delete result.iat
         if (!result) {

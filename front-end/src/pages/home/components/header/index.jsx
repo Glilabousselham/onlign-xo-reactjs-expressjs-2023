@@ -24,7 +24,7 @@ const HomeHeader = () => {
         <>
             <div className='flex justify-between items-center bg-white p-1 rounded-sm'>
                 <div className='flex gap-2 items-center '>
-                    <DisplayImage editable image={user.image} />
+                    <DisplayImage editable image={user?.image} />
                     <div className='font-semibold'>{user?.username}</div>
                 </div>
 

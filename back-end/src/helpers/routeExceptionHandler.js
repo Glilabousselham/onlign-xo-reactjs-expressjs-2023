@@ -3,7 +3,6 @@ module.exports = function routeExceptionHandler(callback) {
         try {
             return await callback(req, res, next)
         } catch (error) {
-
             return next(error)
         }
     }
