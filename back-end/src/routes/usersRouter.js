@@ -1,4 +1,4 @@
-const userRouter = require("express").Router()
+const usersRouter = require("express").Router()
 
 // get all users
 // get all onlign users
@@ -8,4 +8,4 @@ const userRouter = require("express").Router()
 
 
 
-module.exports = userRouter;
+module.exports = usersRouter;

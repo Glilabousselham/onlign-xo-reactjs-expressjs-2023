@@ -1,25 +1,39 @@
-const appConfig = require("../config/appConfig");
 const express = require('express')
-
-class App {
-
-    #port;
-    #server;
+const authRouter = require('../routes/authRouter')
+const mainErrorHandler = require('../error-handlers/handler')
+const cors = require("cors")
 
 
-    constructor() {
-        this.#port = appConfig.PORT
-        this.#server = express()
-    }
+// connect to database
+require("../db-connection/connectToDatabase")()
 
 
-    run = () => {
-        this.#server.listen(this.#port, () => {
-            console.log(`server is running on port http://localhost:${this.#port}`);
-        })
-    }
+app = express()
+
+// set cors middlewares
+app.use(cors())
+
+// set middlewares to parse body data
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
 
 
-}
 
-module.exports = App;
+
+// routes
+app.use('/auth', (req, res, next) => {
+
+
+    setTimeout(() => {
+        next()
+    }, 2000);
+
+}, authRouter);
+
+
+
+// main error handler
+app.use(mainErrorHandler);
+
+
+module.exports = app;

@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getLoggedUserThunk } from '../../redux/user/userThunks'
+import SplashScreen from '../../components/splash-screen'
 
 // classes
 
@@ -10,12 +13,24 @@ const normal_classes = `
 `
 
 const MainLayout = ({ children }) => {
+
+    const checked = useSelector(s => s.userSlice).checked
+
+    const d = useDispatch()
+
+    useEffect(() => {
+        if (checked === true) return;
+        d(getLoggedUserThunk())
+    }, [])
+
     return (
         <div className={`
         ${normal_classes} 
         ${sm_classes}
         `}>
-            {children}
+            {checked === false ? (
+                <SplashScreen />
+            ) : children}
         </div>
     )
 }

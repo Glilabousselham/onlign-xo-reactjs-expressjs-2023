@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { MdMenu } from "react-icons/md"
 import ConfirmDialog from '../../../components/confirm'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 const Header = () => {
-
 
     const navigate = useNavigate()
     const [confirmDialog, setConfirmDialog] = useState(false)
@@ -16,6 +16,10 @@ const Header = () => {
         // navigate to home 
         navigate("/")
     }
+
+
+
+
     return (
         <>
             <div className='w-full flex items-center justify-between'>
