@@ -1,7 +1,6 @@
 const UserModel = require("../models/UserModel");
-const UserRepositoryInterface = require("../repository-interfaces/UserRepositoryInterface");
 
-module.exports = class UserRepository extends UserRepositoryInterface {
+module.exports = class UserRepository {
 
 
     createUser = async (username, password) => {
@@ -10,6 +9,9 @@ module.exports = class UserRepository extends UserRepositoryInterface {
 
     findByUsername = async (username) => {
         return await UserModel.findOne({ username });
+    }
+    findById = async (id) => {
+        return await UserModel.findOne({ _id: id });
     }
 
 }

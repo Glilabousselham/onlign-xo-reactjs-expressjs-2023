@@ -25,5 +25,5 @@ module.exports = function hanler(err, req, res, next) {
 
     res.status(status).json(data)
 
-    // console.log(err);
+    console.log(err);
 }

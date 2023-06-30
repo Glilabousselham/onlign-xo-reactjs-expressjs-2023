@@ -1,14 +1,11 @@
 require("dotenv").config()
-const httpServer = require('./core/httpServer')
 const appConfig = require('./config/appConfig')
-const SocketServer = require("./core/SocketServer")
+const httpServer = require('./core/httpServer')
 
 
-
-// start socker
-SocketServer.getInstance().listen()
-
+require("./core/SocketServer").getInstance().connect(httpServer)
 // start web server
 httpServer.listen(appConfig.PORT, () => {
     console.log(`server is running on port http://localhost:${appConfig.PORT}`);
+    // link socket io
 })

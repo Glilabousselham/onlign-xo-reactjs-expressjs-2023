@@ -4,6 +4,8 @@ const mainErrorHandler = require('../error-handlers/handler')
 const cors = require("cors")
 const http = require('http')
 const socket = require('socket.io')
+const usersRouter = require('../routes/usersRouter')
+const requetsRouter = require('../routes/RequestRouter')
 
 // connect to database
 require("../db-connection/connectToDatabase")()
@@ -26,6 +28,8 @@ app.use(express.json())
 
 // routes
 app.use('/auth', authRouter);
+app.use('/users', usersRouter);
+app.use('/requests', requetsRouter);
 
 
 

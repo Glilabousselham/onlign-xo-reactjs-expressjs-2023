@@ -1,27 +1,19 @@
 const appConfig = require("../config/appConfig");
-const httpServer = require("./httpServer");
 const socketLibrary = require("socket.io")
-
-
-
-module.exports = class SocketServer {
-
-
+const connectionListener = require("../socketLisiners/connectionListener");
+const ConnectionRepositoryFactory = require("../factories/ConnectionRepositoryFactory");
+class SocketServer {
+    #connectionRepository;
     #io = null
     constructor() {
-        this.#io = new socketLibrary.Server(httpServer, {
-            cors: {
-                origin: appConfig.allowedOrigins,
-                credentials: true
-            }
-        })
+        this.#connectionRepository = (new ConnectionRepositoryFactory).createConnectionRepository()
     }
 
     static #instance = null
     /** @returns {SocketServer} */
     static getInstance = () => {
         if (this.#instance === null) {
-            this.#instance = new this;
+            this.#instance = new this();
         }
 
         return this.#instance;
@@ -29,25 +21,32 @@ module.exports = class SocketServer {
 
 
     listen = () => {
-
-
-        // listen for connection
-        this.#io.on("connection", (socket) => {
-
-            const token = socket.handshake.query.token;
-
-            console.log("user token: " + token);
-
-            socket.on('disconnect', () => {
-                console.log('User disconnected:', socket.id);
-            });
-
-        })
+        // listen for new connection
+        this.#io.on("connection", connectionListener)
 
 
 
     }
 
+    connect = (httpServer) => {
+        this.#io = new socketLibrary.Server(httpServer, {
+            cors: {
+                origin: appConfig.allowedOrigins,
+                credentials: true
+            }
+        })
+        this.listen()
+    }
+
+    emitToSpecificUser = async (userId, event, data) => {
+        const connection = await this.#connectionRepository.findByUserId(userId)
+        if (!connection) {
+            return;
+        }
+        this.#io.to(connection.socket).emit(event, data);
+    }
+
 }
 
 
+module.exports = SocketServer;

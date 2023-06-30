@@ -4,6 +4,11 @@ const userSchema = mongoose.Schema({
     password: String,
     image: String
 })
+userSchema.set('toJSON', {
+    transform: function (doc, ret) {
+        delete ret.password;
+    }
+});
 
 
 const UserModel = mongoose.model("User", userSchema);

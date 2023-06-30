@@ -1,17 +1,9 @@
 import React from 'react'
 import { useRouteHook } from '../../../../hooks/useRouteHook'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
-const items = [
-    {
-        name: 'onlign users',
-        to: "/"
-    },
-    {
-        name: 'requests',
-        to: "/requests"
-    },
-]
+
 
 const NavButtons = () => {
 
@@ -19,6 +11,19 @@ const NavButtons = () => {
 
     const navigate = useNavigate()
 
+
+    const items = [
+        {
+            name: 'onlign users',
+            to: "/",
+            count: useSelector(s => s.usersSlice).connectedUsers?.length ?? 0
+        },
+        {
+            name: 'requests',
+            to: "/requests",
+            count: useSelector(s => s.requestsSlice).allRequests?.length ?? 0
+        },
+    ]
     return (
         <div className='bg-white flex  '>
             {items.map((item, i) => (
@@ -27,7 +32,7 @@ const NavButtons = () => {
                     ${routeHook.isRoute(item.to) ? "bg-blue-500 text-white" : "cursor-pointer hover:bg-blue-300 hover:text-white"}
                 `}
                     onClick={() => navigate(item.to)}>
-                    {item.name}
+                    {`${item.name} (${item.count})`}
                 </div>
             ))}
 

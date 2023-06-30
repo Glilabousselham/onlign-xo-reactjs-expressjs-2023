@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getLoggedUserThunk } from '../../redux/user/userThunks'
 import SplashScreen from '../../components/splash-screen'
+import Alert from '../../components/alerts'
+import { hideAlert } from '../../redux/alert/alertSlice'
 
 // classes
 
@@ -18,6 +20,8 @@ const MainLayout = ({ children }) => {
 
     const d = useDispatch()
 
+    const alert = useSelector(s => s.alertSlice).alert
+
     useEffect(() => {
         if (checked === true) return;
         d(getLoggedUserThunk())
@@ -31,6 +35,10 @@ const MainLayout = ({ children }) => {
             {checked === false ? (
                 <SplashScreen />
             ) : children}
+
+            <Alert {...alert} onCancel={() => {
+                d(hideAlert())
+            }} />
         </div>
     )
 }
