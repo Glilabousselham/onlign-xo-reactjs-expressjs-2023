@@ -6,7 +6,7 @@ module.exports = async function validateUserStartingGameMiddleware(req, res, nex
 
     const game = await gameRepo.findStaringGameByUserId(req.user._id);
 
-    if (!game) throw new CustomException("you are not starting a game")
+    if (!game) throw new CustomException("you are not starting a game ")
 
     req.game = game;
 

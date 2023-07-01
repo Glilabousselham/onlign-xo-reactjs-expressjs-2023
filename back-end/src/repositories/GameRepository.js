@@ -4,29 +4,39 @@ module.exports = class GameRepository {
 
     // initialize the game here
     initializeNewGame = async (playerX, playerO, maxRounds = 5) => {
+
+        const rounds = [];
+
+        for (let i = 1; i <= maxRounds; i++) {
+            rounds.push(
+                {
+                    winner: null,
+                    positions: {
+                        "1": null,
+                        "2": null,
+                        "3": null,
+                        "4": null,
+                        "5": null,
+                        "6": null,
+                        "7": null,
+                        "8": null,
+                        "9": null,
+                    },
+                    turn: i % 2 === 0 ? "o" : "x"
+                }
+            )
+        }
+
         let game = await GameModel.create({
             playerX: playerX,
             playerO: playerO,
-            currentRound: 1,
+            // currentRound: 1,
             maxRounds: maxRounds,
             ready: {
                 x: false,
                 o: false,
             },
-            rounds: [{
-                winner: null,
-                positions: {
-                    "1": null,
-                    "2": null,
-                    "3": null,
-                    "4": null,
-                    "5": null,
-                    "6": null,
-                    "7": null,
-                    "8": null,
-                    "9": null,
-                }
-            }],
+            rounds: rounds,
             finished: false,
             playerXLeft: false,
             playerOLeft: false,
@@ -74,17 +84,37 @@ module.exports = class GameRepository {
 
 
     /**
-     * @param {String} gameId 
+     * @param {String} gameid 
      * @param {Number} round 
      * @param {Number} position 
-     * @param {"x":"o"} type 
+     * @param {"x"|"o"} type 
      */
     updateGamePositions = async (gameid, round, position, type) => {
-        const key = `rounds.${round - 1}.positions.${position}`;
+        const key1 = `rounds.${round - 1}.positions.${position}`;
+        const key2 = `rounds.${round - 1}.turn`;
 
         const game = await GameModel.findOneAndUpdate(
             { _id: gameid },
-            { $set: { [key]: type } },
+            {
+                $set: {
+                    [key1]: type,
+                    [key2]: type === "x" ? "o" : "x",
+                }
+            },
+            { new: true, populate: "playerX playerO" }
+        )
+
+        return game.getInfo();
+    }
+
+    setRoundWinner = async (gameid, round, check) => {
+        const data = {}
+
+        data[`rounds.${round - 1}.winner`] = check;
+
+        const game = await GameModel.findOneAndUpdate(
+            { _id: gameid },
+            { $set: data },
             { new: true, populate: "playerX playerO" }
         )
 

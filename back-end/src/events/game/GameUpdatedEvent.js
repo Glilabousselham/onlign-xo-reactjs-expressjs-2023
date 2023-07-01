@@ -10,11 +10,17 @@ class GameUpdatedEvent extends EventInterface {
     handle = () => {
 
         // create game repository
-        const gameRepo = (new GameRepositoryFactory()).createGameRepository()
-        // send message to this users 
+        // const gameRepo = (new GameRepositoryFactory()).createGameRepository()
+
+
+        // send message to this users
         this.socketEmitToUser(this.game.playerX._id, this.game);
         this.socketEmitToUser(this.game.playerO._id, this.game);
+
     }
 }
 
 module.exports = GameUpdatedEvent
+
+
+

@@ -10,7 +10,7 @@ const usersSlice = createSlice({
     reducers: {
         newUserConnected: (state, { payload }) => {
             if (!state.connectedUsers?.find(u => u._id === payload._id)) {
-                state.connectedUsers = [payload, ...state.connectedUsers]
+                state.connectedUsers = [payload, ...(state.connectedUsers ?? [])]
             }
         },
         newUserDisconnected: (state, { payload }) => {

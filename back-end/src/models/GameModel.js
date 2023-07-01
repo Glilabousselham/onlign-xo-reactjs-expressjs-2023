@@ -97,10 +97,10 @@ const gameSchema = new mongoose.Schema({
         type: Number,
         default: 5,
     },
-    currentRound: {
-        type: Number,
-        default: 1,
-    },
+    // currentRound: {
+    //     type: Number,
+    //     default: 1,
+    // },
     playerXLeft: {
         type: Boolean,
         default: false,
@@ -119,6 +119,8 @@ gameSchema.methods.getInfo = function () {
     const scoreX = this.rounds.reduce((totalScore, round) => round.winner === 'x' ? totalScore + 1 : totalScore, 0) ?? 0
     const scoreO = this.rounds.reduce((totalScore, round) => round.winner === 'o' ? totalScore + 1 : totalScore, 0) ?? 0
 
+    let currentRound = this.rounds.findIndex(r => r.winner === null)
+    currentRound = currentRound >= 0 ? currentRound + 1 : 1
 
     return {
         _id: this._id,
@@ -142,13 +144,13 @@ gameSchema.methods.getInfo = function () {
         playerXLeft: this.playerXLeft,
         playerOLeft: this.playerOLeft,
         rounds: this.rounds,
-        currentRound: this.currentRound,
+        currentRound: currentRound,
         currentRoundInfo: {
-            turn: this.rounds[this.currentRound - 1].turn,
-            positions: this.rounds[this.currentRound - 1].positions,
-            winner: this.rounds[this.currentRound - 1].winner,
-            winnerUser: this.rounds[this.currentRound - 1].winner === null ? null : (this.rounds[this.currentRound - 1].winner === 'x' ? this.playerX : this.playerO),
-            userTurn: this.rounds[this.currentRound - 1].turn === "x" ? this.playerX : this.playerO,
+            positions: this.rounds[currentRound - 1].positions,
+            winner: this.rounds[currentRound - 1].winner,
+            winnerUser: (this.rounds[currentRound - 1].winner === null || this.rounds[currentRound - 1].winner === "draw") ? null : (this.rounds[currentRound - 1].winner === 'x' ? this.playerX : this.playerO),
+            turn: this.rounds[currentRound - 1].turn,
+            userTurn: this.rounds[currentRound - 1].turn === "x" ? this.playerX : this.playerO,
         },
         maxRounds: this.maxRounds,
         finished: this.finished,

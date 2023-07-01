@@ -21,5 +21,12 @@ gameRouter.put('/ready',
         gameController.setUserReady
     )
 );
+gameRouter.put('/user-play',
+    routeExceptionHandlerMultiple(
+        authMiddleware,
+        validateUserStartingGameMiddleware,
+        gameController.userPlay
+    )
+);
 
 module.exports = gameRouter;

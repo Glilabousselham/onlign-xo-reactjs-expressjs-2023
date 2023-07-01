@@ -15,5 +15,8 @@ module.exports = class GameController {
     setUserReady = async (req, res) => {
         return res.json(await this.gameService.setUserReady(req.game, req.user._id));
     }
+    userPlay = async (req, res) => {
+        return res.json(await this.gameService.userPlay(req.game, req.user._id, +req.body.position));
+    }
 
 }

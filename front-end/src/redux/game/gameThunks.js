@@ -7,3 +7,6 @@ export const checkIsGameStartingThunk = createThunkHelper('gameSlice/check', asy
 export const setUserReady = createThunkHelper('gameSlice/setUserReady', async () => {
     return (await axios.put("/game/ready")).data
 })
+export const userPlayThunk = createThunkHelper('gameSlice/userPlayThunk', async (position) => {
+    return (await axios.put("/game/user-play", { position })).data
+})
