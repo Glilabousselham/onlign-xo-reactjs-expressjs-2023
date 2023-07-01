@@ -1,4 +1,5 @@
 const EventInterface = require("../../core/event-utils/EventInterface");
+const GameRepositoryFactory = require("../../factories/GameRepositoryFactory");
 
 class GameInitializedEvent extends EventInterface {
     constructor(playerX, playerO) {
@@ -8,13 +9,19 @@ class GameInitializedEvent extends EventInterface {
     }
 
     handle = () => {
-        console.log("game initialized ", {
-            playerX: this.playerX,
-            playerO: this.playerO,
-        });
 
-        this.socketEmitToUser(this.playerX, 'game initialized');
-        this.socketEmitToUser(this.playerO, 'game initialized');
+        // create game repository
+        const gameRepo = (new GameRepositoryFactory()).createGameRepository()
+
+        // initialize game in database
+        gameRepo.initializeNewGame(this.playerX, this.playerO).then(game => {
+
+            // send message to this users 
+            this.socketEmitToUser(this.playerX, game);
+            this.socketEmitToUser(this.playerO, game);
+        })
+
+
 
 
     }

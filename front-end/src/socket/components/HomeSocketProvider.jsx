@@ -30,7 +30,8 @@ const HomeSocketProvider = ({ children }) => {
 
         // listen for game initialize on accept a request
         socket.on("GameInitializedEvent", function (game) {
-            navigate("/game")
+            console.log(game);
+            // navigate("/game")
         })
     }, [])
 
