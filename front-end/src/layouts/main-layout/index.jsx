@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getLoggedUserThunk } from '../../redux/user/userThunks'
 import SplashScreen from '../../components/splash-screen'
 import Alert from '../../components/alerts'
-import { hideAlert } from '../../redux/alert/alertSlice'
+import { hideAlert, setAlert } from '../../redux/alert/alertSlice'
+import { checkIsGameStartingThunk } from '../../redux/game/gameThunks'
+import { useRouteHook } from '../../hooks/useRouteHook'
+import { useNavigate } from 'react-router-dom'
 
 // classes
 
@@ -16,23 +19,51 @@ const normal_classes = `
 
 const MainLayout = ({ children }) => {
 
-    const checked = useSelector(s => s.userSlice).checked
+    const userChecked = useSelector(s => s.userSlice).checked
+    const gameChecked = useSelector(s => s.gameSlice).checked
+    const gameInfo = useSelector(s => s.gameSlice).gameInfo
 
     const d = useDispatch()
 
     const alert = useSelector(s => s.alertSlice).alert
 
     useEffect(() => {
-        if (checked === true) return;
+        if (userChecked === true) return;
         d(getLoggedUserThunk())
+
     }, [])
+
+
+    const routeHook = useRouteHook()
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (userChecked === false || gameChecked === true) return
+
+        d(checkIsGameStartingThunk()).unwrap()
+
+    }, [userChecked])
+
+    useEffect(() => {
+        if (gameInfo !== null && !routeHook.isRoute("/game")) {
+            d(setAlert({
+                message: "there is a game starting right now click ok to continue playing",
+                onHide: () => {
+                    navigate("/game");
+                }
+            }))
+        };
+
+    }, [gameInfo])
+
 
     return (
         <div className={`
         ${normal_classes} 
         ${sm_classes}
         `}>
-            {checked === false ? (
+            {userChecked === false ? (
                 <SplashScreen />
             ) : children}
 

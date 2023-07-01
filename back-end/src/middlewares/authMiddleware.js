@@ -10,7 +10,7 @@ module.exports = async function authMiddleware(req, res, next) {
             throw new UnauthorizedException()
         }
         req.user = result;
-        next()
+        return next()
     } catch (error) {
         throw new UnauthorizedException()
     }

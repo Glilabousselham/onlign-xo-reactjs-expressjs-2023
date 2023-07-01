@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import LoginPage from './pages/login'
 import HomePage from './pages/home'
 import OnlignUsersSection from './pages/home/sections/OnlignUsersSection'
 import RequestsSection from './pages/home/sections/RequestsSection'
 import GamePage from './pages/game'
-import { useDispatch, useSelector } from 'react-redux'
-import { getLoggedUserThunk } from './redux/user/userThunks'
+import { useSelector } from 'react-redux'
 
 const App = () => {
 

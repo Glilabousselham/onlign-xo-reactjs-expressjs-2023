@@ -43,11 +43,51 @@ const gameSchema = new mongoose.Schema({
                     enum: ['x', 'o', null],
                     default: null,
                 },
+                '3': {
+                    type: String,
+                    enum: ['x', 'o', null],
+                    default: null,
+                },
+                '4': {
+                    type: String,
+                    enum: ['x', 'o', null],
+                    default: null,
+                },
+                '5': {
+                    type: String,
+                    enum: ['x', 'o', null],
+                    default: null,
+                },
+                '6': {
+                    type: String,
+                    enum: ['x', 'o', null],
+                    default: null,
+                },
+                '7': {
+                    type: String,
+                    enum: ['x', 'o', null],
+                    default: null,
+                },
+                '8': {
+                    type: String,
+                    enum: ['x', 'o', null],
+                    default: null,
+                },
+                '9': {
+                    type: String,
+                    enum: ['x', 'o', null],
+                    default: null,
+                },
                 // Add keys for positions 3 to 9 in a similar way
+            },
+            turn: {
+                type: String,
+                enum: ['x', 'o'],
+                default: "x",
             },
             winner: {
                 type: String,
-                enum: ['x', 'x', 'draw', null],
+                enum: ['x', 'o', 'draw', null],
                 default: null,
             },
         }],
@@ -75,23 +115,44 @@ const gameSchema = new mongoose.Schema({
 
 gameSchema.methods.getInfo = function () {
 
+
+    const scoreX = this.rounds.reduce((totalScore, round) => round.winner === 'x' ? totalScore + 1 : totalScore, 0) ?? 0
+    const scoreO = this.rounds.reduce((totalScore, round) => round.winner === 'o' ? totalScore + 1 : totalScore, 0) ?? 0
+
+
     return {
         _id: this._id,
-        playerX: this.playerX,
-        playerO: this.playerO,
+        playerX: {
+            _id: this.playerX._id,
+            username: this.playerX.username,
+            image: this.playerX.image,
+            score: scoreX,
+            type: "x",
+        },
+        playerO: {
+            _id: this.playerO._id,
+            username: this.playerO.username,
+            image: this.playerO.image,
+            score: scoreO,
+            type: "o",
+        },
         ready: this.ready,
         playerXLeft: this.playerXLeft,
         playerOLeft: this.playerOLeft,
         rounds: this.rounds,
         currentRound: this.currentRound,
+        currentRoundInfo: {
+            turn: this.rounds[this.currentRound - 1].turn,
+            positions: this.rounds[this.currentRound - 1].positions,
+            winner: this.rounds[this.currentRound - 1].winner,
+            winnerUser: this.rounds[this.currentRound - 1].winner === null ? null : (this.rounds[this.currentRound - 1].winner === 'x' ? this.playerX : this.playerO),
+            userTurn: this.rounds[this.currentRound - 1].turn === "x" ? this.playerX : this.playerO,
+        },
         maxRounds: this.maxRounds,
         finished: this.finished,
         createdAt: this.createdAt,
         updatedAt: this.updatedAt,
-        score: {
-            x: this.rounds.reduce((totalScore, round) => round.winner === 'x' ? totalScore + 1 : totalScore, 0) ?? 0,
-            o: this.rounds.reduce((totalScore, round) => round.winner === 'o' ? totalScore + 1 : totalScore, 0) ?? 0,
-        }
+
     }
 }
 

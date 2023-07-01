@@ -3,9 +3,9 @@ const authRouter = require('../routes/authRouter')
 const mainErrorHandler = require('../error-handlers/handler')
 const cors = require("cors")
 const http = require('http')
-const socket = require('socket.io')
 const usersRouter = require('../routes/usersRouter')
 const requetsRouter = require('../routes/RequestRouter')
+const gameRouter = require('../routes/gameRouter')
 
 // connect to database
 require("../db-connection/connectToDatabase")()
@@ -30,6 +30,7 @@ app.use(express.json())
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/requests', requetsRouter);
+app.use('/game', gameRouter);
 
 
 

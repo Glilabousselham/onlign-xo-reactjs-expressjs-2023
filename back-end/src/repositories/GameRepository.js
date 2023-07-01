@@ -2,6 +2,7 @@ const GameModel = require("../models/GameModel");
 
 module.exports = class GameRepository {
 
+    // initialize the game here
     initializeNewGame = async (playerX, playerO, maxRounds = 5) => {
         let game = await GameModel.create({
             playerX: playerX,
@@ -37,6 +38,28 @@ module.exports = class GameRepository {
 
         return game.getInfo();
     }
+
+
+
+    // get if there is a game satrting
+    findStaringGameByUserId = async (userid) => {
+        const game = await GameModel.findOne({
+            $and: [
+                {
+                    $or: [
+                        { playerX: userid },
+                        { playerO: userid }
+                    ]
+                }, {
+                    finished: false,
+                }
+            ]
+        }).populate("playerX playerO")
+
+        return game?.getInfo() ?? null;
+    }
+
+
 
     findGameByUserId = async (userid) => {
 

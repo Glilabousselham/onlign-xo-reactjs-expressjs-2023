@@ -1,6 +1,4 @@
-const ValidationException = require("../exceptions/ValidationException");
 const AuthService = require("../services/AuthService")
-const loginValidation = require('../validations/loginValidation')
 
 module.exports = class AuthController {
     constructor() {
