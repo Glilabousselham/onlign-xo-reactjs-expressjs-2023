@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { checkIsGameStartingThunk } from "./gameThunks"
+import { checkIsGameStartingThunk, setUserReady } from "./gameThunks"
 
 const initialState = {
     gameInfo: null,
@@ -11,7 +11,9 @@ const gameSlice = createSlice({
     initialState: initialState,
 
     reducers: {
-
+        setGameInfo: (state, { payload }) => {
+            state.gameInfo = payload;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -24,8 +26,17 @@ const gameSlice = createSlice({
 
             })
 
+        builder
+            .addCase(setUserReady.fulfilled, (state, { payload }) => {
+                state.gameInfo = payload
+            })
+
+
     }
 
 })
 
 export default gameSlice.reducer
+
+
+export const { setGameInfo } = gameSlice.actions

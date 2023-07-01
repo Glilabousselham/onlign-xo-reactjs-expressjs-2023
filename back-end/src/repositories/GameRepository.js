@@ -58,13 +58,54 @@ module.exports = class GameRepository {
 
         return game?.getInfo() ?? null;
     }
+    findStaringGameById = async (gameid) => {
+        const game = await GameModel.findOne({
+            $and: [
+                {
+                    _id: gameid
+                }, {
+                    finished: false,
+                }
+            ]
+        }).populate("playerX playerO")
 
-
-
-    findGameByUserId = async (userid) => {
-
+        return game?.getInfo() ?? null;
     }
 
+
+    /**
+     * @param {String} gameId 
+     * @param {Number} round 
+     * @param {Number} position 
+     * @param {"x":"o"} type 
+     */
+    updateGamePositions = async (gameid, round, position, type) => {
+        const key = `rounds.${round - 1}.positions.${position}`;
+
+        const game = await GameModel.findOneAndUpdate(
+            { _id: gameid },
+            { $set: { [key]: type } },
+            { new: true, populate: "playerX playerO" }
+        )
+
+        return game.getInfo();
+    }
+
+
+
+    setUserReady = async (gameid, player) => {
+        const data = {}
+
+        data[`ready.${player}`] = true;
+
+        const game = await GameModel.findOneAndUpdate(
+            { _id: gameid },
+            { $set: data },
+            { new: true, populate: "playerX playerO" }
+        )
+
+        return game.getInfo();
+    }
 
     updateGameById = async () => {
 

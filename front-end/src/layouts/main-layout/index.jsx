@@ -41,7 +41,7 @@ const MainLayout = ({ children }) => {
     useEffect(() => {
         if (userChecked === false || gameChecked === true) return
 
-        d(checkIsGameStartingThunk()).unwrap()
+        d(checkIsGameStartingThunk())
 
     }, [userChecked])
 
@@ -49,10 +49,8 @@ const MainLayout = ({ children }) => {
         if (gameInfo !== null && !routeHook.isRoute("/game")) {
             d(setAlert({
                 message: "there is a game starting right now click ok to continue playing",
-                onHide: () => {
-                    navigate("/game");
-                }
             }))
+            navigate("/game");
         };
 
     }, [gameInfo])

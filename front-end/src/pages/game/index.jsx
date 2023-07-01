@@ -8,6 +8,7 @@ import GameBoard from './components/GameBoard'
 import Turns from './components/Turns'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import BeforeReadyPrompt from './components/BeforeReadyPrompt'
 
 const GamePage = () => {
 
@@ -18,12 +19,11 @@ const GamePage = () => {
 
         if (checked === false) return;
 
-
         if (gameInfo === null) {
             navigate("/")
         }
 
-    }, [gameInfo])
+    }, [gameInfo, checked])
 
 
     return (
@@ -36,6 +36,7 @@ const GamePage = () => {
                     <Chat />
                     <GameBoard />
                     <Turns />
+                    <BeforeReadyPrompt />
                 </div>
             )}
         </MainLayout>

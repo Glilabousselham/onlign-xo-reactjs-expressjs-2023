@@ -128,6 +128,7 @@ gameSchema.methods.getInfo = function () {
             image: this.playerX.image,
             score: scoreX,
             type: "x",
+            ready: this.ready.x,
         },
         playerO: {
             _id: this.playerO._id,
@@ -135,6 +136,7 @@ gameSchema.methods.getInfo = function () {
             image: this.playerO.image,
             score: scoreO,
             type: "o",
+            ready: this.ready.o,
         },
         ready: this.ready,
         playerXLeft: this.playerXLeft,

@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux"
 import { newUserConnected, newUserDisconnected } from '../../redux/users/usersSlice'
 import { newRequestDeleted, newRequestReceived, sendedRequestDeleted } from '../../redux/requests/requestsSlice'
 import { useNavigate } from "react-router-dom"
+import { setGameInfo } from '../../redux/game/gameSlice'
 
 const HomeSocketProvider = ({ children }) => {
 
@@ -27,11 +28,18 @@ const HomeSocketProvider = ({ children }) => {
         socket.on('new-user-disconnected', function (user) {
             d(newUserDisconnected(user))
         })
-
         // listen for game initialize on accept a request
         socket.on("GameInitializedEvent", function (game) {
+            d(setGameInfo(game))
             navigate("/game")
         })
+
+        socket.on("GameUpdatedEvent", function (game) {
+
+            d(setGameInfo(game))
+        })
+
+
     }, [])
 
 
