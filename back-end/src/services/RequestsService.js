@@ -2,7 +2,11 @@
 const RequestRepositoryFactory = require("../factories/RequestRepositoryFactory");
 const UserRepositoryFactory = require("../factories/UserRepositoryFactory");
 const ConnectionRepositoryFactory = require("../factories/ConnectionRepositoryFactory");
-const SocketServer = require("../core/SocketServer");
+const event = require("../core/event-utils/event");
+const RequestSendedEvent = require("../events/request/RequestSendedEvent");
+const RequestRefusedEvent = require("../events/request/RequestRefusedEvent");
+const RequestAcceptedEvent = require("../events/request/RequestAcceptedEvent");
+const RequestCanceledEvent = require("../events/request/RequestCanceledEvent");
 
 module.exports = class RequestsService {
 
@@ -43,7 +47,7 @@ module.exports = class RequestsService {
 
         this.userRepo.findById(sender).then(senderInfo => {
             request.sender = senderInfo
-            SocketServer.getInstance().emitToSpecificUser(receiver, 'new-request', request)
+            event(new RequestSendedEvent(request))
         })
 
         return request;
@@ -62,34 +66,26 @@ module.exports = class RequestsService {
             return request;
         })
     }
-
+    // this is or refused by receiver
     deleteReceived = async (myid, requestid) => {
 
         const request = await this.requestRepo.deleteReceived(myid, requestid);
         if (request) {
-            SocketServer.getInstance().emitToSpecificUser(request.sender, "sended-request-deleted", request)
+            event(new RequestRefusedEvent(request))
         }
         return request;
     }
     acceptReceived = async (myid, requestid) => {
         const request = await this.requestRepo.deleteReceived(myid, requestid);
         if (!request) throw new Error("the request is not available right now")
-
-
-
         // game initialization
-
-
-
-        SocketServer.getInstance().emitToSpecificUser(request.sender, "sended-request-accepted", request)
+        event(new RequestAcceptedEvent(request))
         return request;
     }
-
+    // the event canceled
     deleteSended = async (myid, requestid) => {
         const request = await this.requestRepo.deleteSended(myid, requestid);
-        if (request) {
-            SocketServer.getInstance().emitToSpecificUser(request.receiver, "received-request-deleted", request)
-        }
+        if (request) event(new RequestCanceledEvent(request))
         return request;
     }
 

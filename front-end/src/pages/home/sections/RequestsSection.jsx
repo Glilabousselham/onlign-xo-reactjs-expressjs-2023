@@ -23,7 +23,6 @@ const RequestsSection = () => {
 
         try {
             await d(acceptReceivedRequestThunk(id)).unwrap()
-            window.location.reload()
         } catch (error) {
             d(setAlert({
                 message: error?.data?.message

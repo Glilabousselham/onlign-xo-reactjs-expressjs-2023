@@ -48,7 +48,7 @@ const OnlignUsersSection = () => {
 
     const socket = useSocket()
     useEffect(() => {
-        socket.on("sended-request-deleted", (data) => {
+        socket.on("RequestRefusedEvent", (data) => {
             d(sendedRequestDeleted(data))
 
             d(setAlert({ message: "the user had refuse your challenge " }))

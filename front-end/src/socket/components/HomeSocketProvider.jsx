@@ -3,30 +3,34 @@ import useSocket from '../../hooks/useSocket'
 import { useDispatch } from "react-redux"
 import { newUserConnected, newUserDisconnected } from '../../redux/users/usersSlice'
 import { newRequestDeleted, newRequestReceived, sendedRequestDeleted } from '../../redux/requests/requestsSlice'
+import { useNavigate } from "react-router-dom"
 
 const HomeSocketProvider = ({ children }) => {
 
     const socket = useSocket()
 
+    const navigate = useNavigate()
+
+
     const d = useDispatch()
     useEffect(() => {
-        socket.on('new-request', function (data) {
+        // this mean the request is sended to me, which mean the request received to me 
+        socket.on('RequestSendedEvent', function (data) {
             d(newRequestReceived(data))
         })
-        socket.on('received-request-deleted', function (data) {
+        socket.on('RequestCanceledEvent', function (data) {
             d(newRequestDeleted(data))
-        })
-        socket.on('sended-request-deleted', function (data) {
-            d(sendedRequestDeleted(data))
-        })
-        socket.on('sended-request-accepted', function (data) {
-            window.location.reload() // reload the page 
         })
         socket.on('new-user-connection', function (user) {
             d(newUserConnected(user))
         })
         socket.on('new-user-disconnected', function (user) {
             d(newUserDisconnected(user))
+        })
+
+        // listen for game initialize on accept a request
+        socket.on("GameInitializedEvent", function (game) {
+            navigate("/game")
         })
     }, [])
 
