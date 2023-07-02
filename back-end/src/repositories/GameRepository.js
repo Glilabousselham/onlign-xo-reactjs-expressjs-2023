@@ -62,6 +62,10 @@ module.exports = class GameRepository {
                     ]
                 }, {
                     finished: false,
+                }, {
+                    playerXLeft: false,
+                }, {
+                    playerOLeft: false,
                 }
             ]
         }).populate("playerX playerO")
@@ -121,8 +125,6 @@ module.exports = class GameRepository {
         return game.getInfo();
     }
 
-
-
     setUserReady = async (gameid, player) => {
         const data = {}
 
@@ -137,8 +139,20 @@ module.exports = class GameRepository {
         return game.getInfo();
     }
 
-    updateGameById = async () => {
-
+    setGameFinished = async (gameid) => {
+        const game = await GameModel.findOneAndUpdate({ _id: gameid },
+            { $set: { finished: true } },
+            { new: true, populate: "playerX playerO" }
+        )
+        return game.getInfo();
     }
 
+    setPlayerLeft = async (gameid, data) => {
+        const game = await GameModel.findOneAndUpdate(
+            { _id: gameid },
+            { $set: data },
+            { new: true, populate: "playerX playerO" }
+        );
+        return game.getInfo();
+    }
 }

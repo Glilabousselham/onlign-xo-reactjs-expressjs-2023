@@ -33,25 +33,29 @@ const BeforeReadyPrompt = () => {
         setL(false)
     }
 
+
+    const me = gameInfo.playerX._id === user._id ? gameInfo.playerX : gameInfo.playerO
+    const opponent = gameInfo.playerX._id !== user._id ? gameInfo.playerX : gameInfo.playerO
+
     return !hide && (
         <div className='z-10 bg-[#11111145] fixed sm:absolute h-screen sm:h-full w-screen sm:w-full top-0 left-0 flex items-center justify-center p-2'>
             <div className='w-full p-3 bg-white rounded-sm'>
                 <div className='font-semibold'>Wait...</div>
                 <div className='flex items-center gap-2 mt-3'>
-                    <DisplayImage image={gameInfo.playerX.image} />
-                    <div className='font-semibold'>{gameInfo.playerX._id === user._id ? gameInfo.playerX.username + " (you)" : gameInfo.playerX.username}</div>
-                    <div className='ms-auto px-2 font-semibold text-green-500'>{gameInfo.playerX.ready ? "Ready" : ""}</div>
+                    <DisplayImage image={me.image} />
+                    <div className='font-semibold'>{me.username + " (you)"}</div>
+                    <div className='ms-auto px-2 font-semibold text-green-500'>{me.ready ? "Ready" : ""}</div>
                 </div>
                 <div className='flex items-center gap-2 mt-3'>
-                    <DisplayImage image={gameInfo.playerO.image} />
-                    <div className='font-semibold'>{gameInfo.playerO._id === user._id ? gameInfo.playerO.username + " (you)" : gameInfo.playerO.username}</div>
-                    <div className='ms-auto px-2 font-semibold text-green-500'>{gameInfo.playerO.ready ? "Ready" : ""}</div>
+                    <DisplayImage image={opponent.image} />
+                    <div className='font-semibold'>{opponent.username}</div>
+                    <div className='ms-auto px-2 font-semibold text-green-500'>{opponent.ready ? "Ready" : ""}</div>
                 </div>
                 <div className='flex justify-end gap-2 mt-2'>
-                    <Button disabled={l} type={"primary"} onClick={onReadyButtonClicked}>Start</Button>
+                    <Button disabled={me.ready || l} type={"primary"} onClick={onReadyButtonClicked}>Start</Button>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

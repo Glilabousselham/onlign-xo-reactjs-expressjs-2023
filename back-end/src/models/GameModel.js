@@ -116,11 +116,14 @@ const gameSchema = new mongoose.Schema({
 gameSchema.methods.getInfo = function () {
 
 
-    const scoreX = this.rounds.reduce((totalScore, round) => round.winner === 'x' ? totalScore + 1 : totalScore, 0) ?? 0
-    const scoreO = this.rounds.reduce((totalScore, round) => round.winner === 'o' ? totalScore + 1 : totalScore, 0) ?? 0
+    const scoreX = this.rounds.reduce((totalScore, round) => getWinner(round.positions) === 'x' ? totalScore + 1 : totalScore, 0) ?? 0
+    const scoreO = this.rounds.reduce((totalScore, round) => getWinner(round.positions) === 'o' ? totalScore + 1 : totalScore, 0) ?? 0
 
-    let currentRound = this.rounds.findIndex(r => r.winner === null)
-    currentRound = currentRound >= 0 ? currentRound + 1 : 1
+    let currentRound = this.rounds.findIndex(r => getWinner(r.positions) === null) + 1
+
+    if (currentRound === 0) {
+        currentRound = this.maxRounds
+    }
 
     return {
         _id: this._id,
@@ -143,12 +146,19 @@ gameSchema.methods.getInfo = function () {
         ready: this.ready,
         playerXLeft: this.playerXLeft,
         playerOLeft: this.playerOLeft,
-        rounds: this.rounds,
+        rounds: this.rounds.map(round => {
+            return {
+                winner: getWinner(round.positions),
+                winnerUser: (getWinner(round.positions) === null || getWinner(round.positions) === "draw") ? null : (getWinner(round.positions) === 'x' ? this.playerX : this.playerO),
+                positions: round.positions,
+                turn: round.turn,
+            }
+        }),
         currentRound: currentRound,
         currentRoundInfo: {
             positions: this.rounds[currentRound - 1].positions,
-            winner: this.rounds[currentRound - 1].winner,
-            winnerUser: (this.rounds[currentRound - 1].winner === null || this.rounds[currentRound - 1].winner === "draw") ? null : (this.rounds[currentRound - 1].winner === 'x' ? this.playerX : this.playerO),
+            winner: getWinner(this.rounds[currentRound - 1].positions),
+            winnerUser: (getWinner(this.rounds[currentRound - 1].positions) === null || getWinner(this.rounds[currentRound - 1].positions) === "draw") ? null : (getWinner(this.rounds[currentRound - 1].positions) === 'x' ? this.playerX : this.playerO),
             turn: this.rounds[currentRound - 1].turn,
             userTurn: this.rounds[currentRound - 1].turn === "x" ? this.playerX : this.playerO,
         },
@@ -160,6 +170,37 @@ gameSchema.methods.getInfo = function () {
     }
 }
 
+function getWinner(positions) {
+
+    const cases = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+        // 
+        [1, 4, 7],
+        [2, 5, 8],
+        [3, 6, 9],
+        // 
+        [1, 5, 9],
+        [3, 5, 7],
+    ]
+
+    // check user
+    for (const cas of cases) {
+        if (positions[cas[0]] === positions[cas[1]] && positions[cas[0]] === positions[cas[2]] && positions[cas[0]] !== null) {
+            return positions[cas[0]];
+        }
+    }
+
+    // check for draw 
+    for (const i of [1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+        if (positions[i] === null) {
+            return null;
+        }
+    }
+
+    return "draw";
+}
 const GameModel = mongoose.model('Game', gameSchema);
 
 module.exports = GameModel;

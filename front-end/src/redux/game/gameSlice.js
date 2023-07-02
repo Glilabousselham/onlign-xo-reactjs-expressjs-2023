@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { checkIsGameStartingThunk, setUserReady, userPlayThunk } from "./gameThunks"
+import { checkIsGameStartingThunk, setUserReady, userLeaveThunk, userPlayThunk } from "./gameThunks"
 
 const initialState = {
     gameInfo: null,
@@ -34,6 +34,9 @@ const gameSlice = createSlice({
         builder
             .addCase(userPlayThunk.fulfilled, (state, { payload }) => {
                 state.gameInfo = payload
+            })
+        builder
+            .addCase(userLeaveThunk.fulfilled, (state, { payload }) => {
             })
 
 

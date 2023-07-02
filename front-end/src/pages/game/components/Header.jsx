@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
-import { MdMenu } from "react-icons/md"
 import ConfirmDialog from '../../../components/confirm'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { userLeaveThunk } from '../../../redux/game/gameThunks'
 const Header = () => {
 
     const navigate = useNavigate()
     const [confirmDialog, setConfirmDialog] = useState(false)
+    const d = useDispatch()
     const onConfrim = async () => {
         // do some thing 
-
+        d(userLeaveThunk()).unwrap().then(res => {
+            window.location.reload()
+        }).catch(err => { })
         // close
         setConfirmDialog(false);
 

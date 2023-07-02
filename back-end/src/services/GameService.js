@@ -42,12 +42,13 @@ module.exports = class GameService {
 
         game = await this.gameRepo.updateGamePositions(game._id, game.currentRound, position, player);
 
-        // check round status
 
-        const check = this.#checkRound(game.currentRoundInfo.positions);
+        // check if the game finished
+        const check = this.#checkGameFinished(game)
 
-        if (check !== null) {
-            game = await this.gameRepo.setRoundWinner(game._id, game.currentRound, check);
+        if (check) {
+            console.log("game finished");
+            game = await this.gameRepo.setGameFinished(game._id);
         }
 
         // dispatch the new game info to users
@@ -55,42 +56,23 @@ module.exports = class GameService {
 
         return game;
     }
-
-    // private utils
-    // function to check for winner 
-    /**
-     * @returns {"x"|"o"|"draw"|null}
-     */
-    #checkRound = (positions) => {
-
-        const cases = [
-            [1, 2, 3],
-            [4, 5, 6],
-            [7, 8, 9],
-            // 
-            [1, 4, 7],
-            [2, 5, 8],
-            [3, 6, 9],
-            // 
-            [1, 5, 9],
-            [3, 5, 7],
-        ]
-
-        // check user
-        for (const cas of cases) {
-            if (positions[cas[0]] === positions[cas[1]] && positions[cas[0]] === positions[cas[2]] && positions[cas[0]] !== null) {
-                return positions[cas[0]];
-            }
+    userLeave = async (game, userid) => {
+        const data = {};
+        if (game.playerX._id === userid) {
+            data.playerXLeft = true;
+        } else {
+            data.playerOLeft = true;
         }
 
-        // check for draw 
-        for (const i of [1, 2, 3, 4, 5, 6, 7, 8, 9]) {
-            if (positions[i] === null) {
-                return null;
-            }
-        }
+        game = await this.gameRepo.setPlayerLeft(game._id, data)
 
-        return "draw";
+        event(new GameUpdatedEvent(game))
+
+        return game;
+    }
+    #checkGameFinished = (gameInfo) => {
+        const allRoundsIsFinished = Object.values(gameInfo.rounds).filter(round => round.winner === null).length === 0;
+        return allRoundsIsFinished;
     }
 
 

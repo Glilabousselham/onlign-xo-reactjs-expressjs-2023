@@ -10,3 +10,6 @@ export const setUserReady = createThunkHelper('gameSlice/setUserReady', async ()
 export const userPlayThunk = createThunkHelper('gameSlice/userPlayThunk', async (position) => {
     return (await axios.put("/game/user-play", { position })).data
 })
+export const userLeaveThunk = createThunkHelper('gameSlice/userLeaveThunk', async () => {
+    return (await axios.put("/game/user-leave")).data
+})

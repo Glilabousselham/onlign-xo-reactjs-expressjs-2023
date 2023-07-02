@@ -9,6 +9,9 @@ import Turns from './components/Turns'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import BeforeReadyPrompt from './components/BeforeReadyPrompt'
+import OnPlayerWinInRound from './components/OnPlayerWinInRound'
+import GameFinishedAlert from './components/GameFinishedAlert'
+import PlayerLeftAlert from './components/PlayerLeftAlert'
 
 const GamePage = () => {
 
@@ -37,6 +40,9 @@ const GamePage = () => {
                     <GameBoard />
                     <Turns />
                     <BeforeReadyPrompt />
+                    <OnPlayerWinInRound />
+                    <GameFinishedAlert />
+                    <PlayerLeftAlert />
                 </div>
             )}
         </MainLayout>
