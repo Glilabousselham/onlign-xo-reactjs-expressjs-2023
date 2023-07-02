@@ -2,8 +2,7 @@ import React from 'react'
 import DisplayImage from '../../../components/DisplayImage'
 import Button from '../../../components/buttons'
 import { useSelector } from 'react-redux'
-import { useState } from 'react'
-import { useEffect } from 'react'
+
 
 const GameFinishedAlert = () => {
 
@@ -22,6 +21,10 @@ const GameFinishedAlert = () => {
     const onClickOk = () => {
         window.location.reload();
     }
+
+    const me = gameInfo.playerX._id === user._id ? gameInfo.playerX : gameInfo.playerO
+    const opponent = gameInfo.playerX._id !== user._id ? gameInfo.playerX : gameInfo.playerO
+
     return (
         <div className='z-10 bg-[#11111145] fixed sm:absolute h-screen sm:h-full w-screen sm:w-full top-0 left-0 flex items-center justify-center p-2'>
             <div className='w-full px-3 py-6 bg-white rounded-sm' >
@@ -35,15 +38,15 @@ const GameFinishedAlert = () => {
                 <div className='flex justify-between items-center font-normal p-1 bg-white mt-2 rounded-sm'>
                     <div className='flex w-[40%] justify-center items-center gap-2'>
                         {/* <DisplayImage image={null} /> */}
-                        <div className=''>{gameInfo.playerX._id === user._id ? "You" : gameInfo.playerX.username}(x)</div>
+                        <div className=''>You({me.type})</div>
                     </div>
                     <div className='flex w-[20%] justify-center gap-2'>
-                        <span>{gameInfo.playerX.score}</span>
+                        <span>{me.score}</span>
                         <span>-</span>
-                        <span>{gameInfo.playerO.score}</span>
+                        <span>{opponent.score}</span>
                     </div>
                     <div className='flex w-[40%]  justify-center items-center gap-2'>
-                        <div className=''>{gameInfo.playerO._id === user._id ? "You" : gameInfo.playerX.username}(o)</div>
+                        <div className=''>{opponent.username}({opponent.type})</div>
                         {/* <DisplayImage image={null} /> */}
                     </div>
                 </div>

@@ -10,7 +10,10 @@ const MessageInput = ({
     const dRef = useRef(null)
 
     const handleClose = ({ target }) => {
-        if (!dRef.current.contains(target)) onCancel?.();
+        if (!dRef.current.contains(target)) {
+            onCancel?.()
+            setmessage("")
+        };
     }
     const [message, setmessage] = useState("")
 

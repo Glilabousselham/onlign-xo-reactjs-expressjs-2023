@@ -30,8 +30,6 @@ const Score = ({ mute }) => {
         })
     }, [])
 
-    console.log(message);
-
 
     const me = gameInfo.playerX._id === user._id ? gameInfo.playerX : gameInfo.playerO
     const opponent = gameInfo.playerX._id !== user._id ? gameInfo.playerX : gameInfo.playerO
