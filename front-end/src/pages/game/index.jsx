@@ -12,6 +12,7 @@ import BeforeReadyPrompt from './components/BeforeReadyPrompt'
 import OnPlayerWinInRound from './components/OnPlayerWinInRound'
 import GameFinishedAlert from './components/GameFinishedAlert'
 import PlayerLeftAlert from './components/PlayerLeftAlert'
+import { useState } from 'react'
 
 const GamePage = () => {
 
@@ -28,15 +29,16 @@ const GamePage = () => {
 
     }, [gameInfo, checked])
 
+    const [mute, setMute] = useState(false)
 
     return (
         <MainLayout>
             {gameInfo !== null && (
                 <div className='p-2 flex flex-col h-full'>
                     <Header />
-                    <Score />
+                    <Score mute={mute} />
                     <Rounds />
-                    <Chat />
+                    <Chat mute={mute} onMuteChange={(m) => setMute(m)} />
                     <GameBoard />
                     <Turns />
                     <BeforeReadyPrompt />

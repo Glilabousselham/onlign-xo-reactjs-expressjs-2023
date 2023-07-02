@@ -14,6 +14,7 @@ module.exports = function connectionListener(socket) {
         socket.broadcast.emit('new-user-connection', user)
 
         socket.on('disconnect', () => {
+            connectionRepo.disconnect(user._id);
             socket.broadcast.emit('new-user-disconnected', user)
         });
     } catch (error) {

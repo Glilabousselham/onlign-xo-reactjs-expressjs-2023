@@ -23,4 +23,8 @@ module.exports = class GameController {
         return res.json(await this.gameService.userLeave(req.game, req.user._id))
     }
 
+    message = async (req, res) => {
+        return res.json(await this.gameService.message(req.game, req.user._id, req.body.message))
+    }
+
 }

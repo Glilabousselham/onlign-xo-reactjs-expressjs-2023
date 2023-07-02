@@ -1,4 +1,5 @@
 const event = require("../core/event-utils/event");
+const GameMessageEvent = require("../events/game/GameMessageEvent");
 const GameUpdatedEvent = require("../events/game/GameUpdatedEvent");
 const CustomException = require("../exceptions/CustomException");
 const GameRepositoryFactory = require("../factories/GameRepositoryFactory")
@@ -70,6 +71,24 @@ module.exports = class GameService {
 
         return game;
     }
+
+    message = async (game, userid, message) => {
+
+        if (typeof message !== "string") {
+            return {};
+        }
+
+        if (message.length >= 75) {
+            message = message.substring(0, 74);
+        }
+
+        const targetUser = game.playerX._id.toString() === userid ? game.playerO._id : game.playerX._id;
+
+        event(new GameMessageEvent(targetUser, message.trim()))
+
+        return {};
+    }
+
     #checkGameFinished = (gameInfo) => {
         const allRoundsIsFinished = Object.values(gameInfo.rounds).filter(round => round.winner === null).length === 0;
         return allRoundsIsFinished;
