@@ -32,7 +32,7 @@ class SocketServer {
         this.#io = new socketLibrary.Server(httpServer, {
             cors: {
                 origin: appConfig.allowedOrigins,
-                credentials: true
+                credentials: false
             }
         })
         this.listen()

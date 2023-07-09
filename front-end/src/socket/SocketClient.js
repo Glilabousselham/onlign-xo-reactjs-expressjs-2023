@@ -9,7 +9,7 @@ class SocketClient {
     connect = () => {
         this.#socket = io(process.env.REACT_APP_API_URL,
             {
-                withCredentials: true,
+
                 query: {
                     token: window.localStorage.getItem('token')
                 }
