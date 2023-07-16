@@ -28,6 +28,8 @@ const userSlice = createSlice({
                 state.checked = true;
             }).addCase(getLoggedUserThunk.rejected, (state) => {
                 state.checked = true;
+                state.user = null;
+                // clear the localStorage
             })
 
     }

@@ -22,6 +22,10 @@ module.exports = class ConnectionRepository {
     }
 
     getConnectedUsers = async (myid) => {
-        return await ConnectionModel.find({ user: { $ne: myid }, socket: { $ne: null } }, { user: 1 }).populate("user");
+        const connectedUsers = await ConnectionModel.find({ user: { $ne: myid }, socket: { $ne: null } }).populate("user");
+
+        // console.log(connectedUsers);
+
+        return connectedUsers;
     }
 }

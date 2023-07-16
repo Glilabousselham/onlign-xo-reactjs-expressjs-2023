@@ -9,6 +9,8 @@ module.exports = function connectionListener(socket) {
 
         const user = JWT.verify(token)
 
+        // verify the user exists in the database
+
         connectionRepo.newConnection(user._id, socket.id);
 
         socket.broadcast.emit('new-user-connection', user)

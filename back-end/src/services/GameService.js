@@ -20,7 +20,7 @@ module.exports = class GameService {
 
     setUserReady = async (game, userid) => {
 
-        const player = game.playerX._id.toString() === userid ? "x" : 'o';
+        const player = game.playerX._id.toString() === userid.toString() ? "x" : 'o';
 
         const newGameData = await this.gameRepo.setUserReady(game._id, player);
 
@@ -39,7 +39,7 @@ module.exports = class GameService {
 
         if (game.currentRoundInfo.positions[position] !== null) throw new CustomException("the position that you play in is not empty")
 
-        const player = game.playerX._id.toString() === userid ? "x" : 'o';
+        const player = game.playerX._id.toString() === userid.toString() ? "x" : 'o';
 
         game = await this.gameRepo.updateGamePositions(game._id, game.currentRound, position, player);
 
