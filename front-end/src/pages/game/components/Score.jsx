@@ -37,7 +37,7 @@ const Score = ({ mute }) => {
 
     return (
         <div className='flex justify-between items-center font-semibold p-1 bg-white mt-2 rounded-sm'>
-            <div className='flex w-[40%] justify-start items-center gap-2 relative'>
+            <div className='flex w-[40%] justify-start items-center gap-2 relative line-clamp-2'>
                 <DisplayImage image={opponent.image ?? null} />
                 <div className=''>{opponent.username}({opponent.type})</div>
                 {(!mute && message) && <div onClick={() => setMessage(null)} className='absolute left-0 top-12 line-clamp-4 bg-blue-400 text-white w-fit px-2 rounded-sm py-1 shadow max-w-[300px]'>
