@@ -11,7 +11,7 @@ module.exports = class GameService {
     }
 
     checkGameStarting = async (userid) => {
-        const game = await this.gameRepo.findStaringGameByUserId(userid);
+        const game = await this.gameRepo.findStaringGameByUserId(userid.toStrng());
 
         if (!game) throw new Error("there is no game starting by this user ");
 
@@ -59,7 +59,7 @@ module.exports = class GameService {
     }
     userLeave = async (game, userid) => {
         const data = {};
-        if (game.playerX._id === userid) {
+        if (game.playerX._id.toString() === userid.toString()) {
             data.playerXLeft = true;
         } else {
             data.playerOLeft = true;
@@ -82,7 +82,7 @@ module.exports = class GameService {
             message = message.substring(0, 74);
         }
 
-        const targetUser = game.playerX._id.toString() === userid ? game.playerO._id : game.playerX._id;
+        const targetUser = game.playerX._id.toString() === userid.toString() ? game.playerO._id : game.playerX._id;
 
         event(new GameMessageEvent(targetUser, message.trim()))
 
