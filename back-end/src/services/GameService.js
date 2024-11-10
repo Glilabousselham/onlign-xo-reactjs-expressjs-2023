@@ -11,7 +11,7 @@ module.exports = class GameService {
     }
 
     checkGameStarting = async (userid) => {
-        const game = await this.gameRepo.findStaringGameByUserId(userid.toStrng());
+        const game = await this.gameRepo.findStaringGameByUserId(userid);
 
         if (!game) throw new Error("there is no game starting by this user ");
 

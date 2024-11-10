@@ -3,8 +3,6 @@ import DisplayImage from '../../../components/DisplayImage'
 import { useSelector } from 'react-redux'
 import useSocket from '../../../hooks/useSocket'
 
-import { TbMessageCircle2, TbMessageCircleOff } from "react-icons/tb"
-
 const Score = ({ mute }) => {
 
     const gameInfo = useSelector(s => s.gameSlice).gameInfo
@@ -12,19 +10,19 @@ const Score = ({ mute }) => {
 
     const socket = useSocket()
 
-    const [message, setMessage] = useState(null)
+    const [message, setMessage] = useState("")
     const [timeoutId, setTimeoutId] = useState(null)
     useEffect(() => {
-        socket.on('GameMessageEvent', (message) => {
+        socket.on('GameMessageEvent', (incomingMessage) => {
 
-            setMessage(message)
+            setMessage(incomingMessage)
 
             if (timeoutId) {
                 clearTimeout(timeoutId)
             }
 
             setTimeoutId(setTimeout(() => {
-                setMessage(null)
+                setMessage("")
                 setTimeoutId(null)
             }, 5000))
         })
@@ -37,12 +35,14 @@ const Score = ({ mute }) => {
 
     return (
         <div className='flex justify-between items-center font-semibold p-1 bg-white mt-2 rounded-sm'>
-            <div className='flex w-[40%] justify-start items-center gap-2 relative line-clamp-2'>
+            <div className='flex w-[40%] justify-start items-center gap-2 relative line-clamp-2 overflow-visible'>
                 <DisplayImage image={opponent.image ?? null} />
                 <div className=''>{opponent.username}({opponent.type})</div>
-                {(!mute && message) && <div onClick={() => setMessage(null)} className='absolute left-0 top-12 line-clamp-4 bg-blue-400 text-white w-fit px-2 rounded-sm py-1 shadow max-w-[300px]'>
-                    {message}
-                </div>}
+                {(mute == false && message.length != 0) && (
+                    <div onClick={() => setMessage(null)} className='absolute left-0 top-14 line-clamp-4 bg-blue-400 text-white w-fit px-2 rounded-sm py-1 shadow max-w-[300px] z-50'>
+                        {message}
+                    </div>
+                )}
             </div>
             <div className='flex w-[20%] justify-center font-bold gap-2'>
                 <span>{opponent.score}</span>

@@ -20,9 +20,12 @@ module.exports = class AuthService {
 
 
         let user = await this.userRepository.findByUsername(value.username);
+  
 
-        if (user !== null && !Hash.compare(value.password, user.password)) {
-            throw new ValidationException().mSetErrors({ password: "the password is wrong" })
+        if (user !== null) {
+            if (!Hash.compare(value.password, user.password)) {
+                throw new ValidationException().mSetErrors({ password: "the password is wrong" })
+            }
         } else {
             // create new user
             user = await this.userRepository.createUser(value.username, Hash.make(value.password));
