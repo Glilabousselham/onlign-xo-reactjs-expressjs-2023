@@ -8,13 +8,16 @@ module.exports = class UsersService {
     }
 
     getConnectedUsers = async (myid) => {
-        return (await this.connectionRepository.getConnectedUsers(myid)).map((c => {
-            return {
-                _id: c.user._id,
-                username: c.user.username,
-                image: c.user.image,
-            }
-        }));
+        return (await this.connectionRepository.getConnectedUsers(myid))
+            .filter(c => c.user)
+            .map((c => {
+
+                return {
+                    _id: c.user?._id,
+                    username: c.user?.username,
+                    image: c.user?.image,
+                }
+            }));
     }
 
 }
